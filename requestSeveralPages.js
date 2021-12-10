@@ -29,7 +29,11 @@ const graphics = [
     }
 ];
 
-(async () => {
+setInterval(() => {
+    myFunction();
+}, 600000);
+
+const myFunction = async () => {
     const browser = await chromium.launch({ headless: false });
 
     for (const graphic of graphics) {
@@ -38,10 +42,14 @@ const graphics = [
         const content = await page.textContent('.product-page-description');
         if(content.includes("Add to cart")){
             console.log(`${graphic.name} TIENE STOCK!!!!`);
+
         }else{
             console.log(`No hay ${graphic.name}`);
         }
         await page.close();
     }
+    console.log(`\n esperando... \n`);
     await browser.close();
-})();
+};
+
+myFunction();
