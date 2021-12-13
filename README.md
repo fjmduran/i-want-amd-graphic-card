@@ -1,4 +1,4 @@
-# Para coseguir una tarjeta gráfica AMD a un precio razonable
+# Para conseguir una tarjeta gráfica AMD a un precio razonable
 
 Es una locura los precios de las tarjetas gráficas, están al doble y triple de su precio las pocas unidades que salen a la venta, es por ello que me he creado este *scrapper*.
 

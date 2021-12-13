@@ -16,25 +16,32 @@ const graphics = [
     //'5950X Processor'
 ];
 
-const myFunction =async () => {
+const myFunction = async () => {
     const browser = await chromium.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto('https://www.amd.com/en/direct-buy/es');
-    const elements = await page.$$('.direct-buy');
-    
-    let hasStock=false;
-    for(const element of elements){
-        const text = await element.innerText();
-        graphics.forEach(graphic=>{
-            if(text.includes(graphic) && !text.includes('Out of Stock')){
-                hasStock=true;
-                console.log(`${graphic} TIENE STOCK!!!!`);
-                sendEmail(graphic);
-            }
-        });
+    try {
+        const browser = await chromium.launch({ headless: false });
+        const page = await browser.newPage();
+        await page.goto('https://www.amd.com/en/direct-buy/es',{timeout:120000});
+        const elements = await page.$$('.direct-buy');
+
+        let hasStock = false;
+        for (const element of elements) {
+            const text = await element.innerText();
+            graphics.forEach(graphic => {
+                if (text.includes(graphic) && !text.includes('Out of Stock')) {
+                    hasStock = true;
+                    console.log(`${graphic} TIENE STOCK!!!!`);
+                    sendEmail(graphic);
+                }
+            });
+        }
+        if (!hasStock) console.log(`${new Date().toLocaleTimeString()} - Sigue buscando... 😢 \n`);
+        await browser.close();
+    } catch (error) {
+        console.log('Error cargando la web de AMD');
+        console.log(error);
+        await browser.close();
     }
-    if(!hasStock) console.log('\n Sigue buscando... 😢 \n' );
-    await browser.close();
 };
 
 myFunction();
@@ -55,14 +62,15 @@ function sendEmail(graphic) {
 
         const mailOptions = {
             to: process.env.EMAIL_TO,
-            subject: `HAY STOCK DE ${graphic} 😎` ,
+            subject: `HAY STOCK DE ${graphic} 😎`,
             text: "https://www.amd.com/en/direct-buy/es",
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
                 console.log('Falló el envío del email');
-                console.log(err);                
+                console.log(err);
+                return;
             }
             console.log(`Email enviado 📧`);
         });
