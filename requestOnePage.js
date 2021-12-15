@@ -19,7 +19,8 @@ const graphics = [
 const myFunction = async () => {
     const browser = await chromium.launch({ headless: false, args: ["--no-sandbox"] });
     try {
-        const page = await browser.newPage();
+        const context = await browser.newContext();
+        const page = await context.newPage();
         await page.goto('https://www.amd.com/en/direct-buy/es',{timeout:120000});
         const elements = await page.$$('.direct-buy');
 
