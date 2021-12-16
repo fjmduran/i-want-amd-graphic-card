@@ -7,35 +7,19 @@ const nodemailer = require('nodemailer');
 //Cargo las variables de entorno
 dotenv.config();
 
-const graphics = [
-    'RX 6900 XT Graphics',
-    'RX 6800 XT Graphics',
-    'RX 6800 Graphics',
-    'RX 6700 XT Graphics',
-    'RX 6800 XT Midnight Black',
-    //'5950X Processor'
-];
-
 const myFunction = async () => {
     const browser = await chromium.launch({ headless: false, chromiumSandbox: false });
     try {
         const context = await browser.newContext();
         const page = await context.newPage();
-        await page.goto('https://www.amd.com/en/direct-buy/es',{timeout:120000});
-        const elements = await page.$$('.direct-buy');
-
-        let hasStock = false;
-        for (const element of elements) {
-            const text = await element.innerText();
-            graphics.forEach(graphic => {
-                if (text.includes(graphic) && !text.includes('Out of Stock')) {
-                    hasStock = true;
-                    console.log(`${graphic} TIENE STOCK!!!!`);
-                    sendEmail(graphic);
-                }
-            });
+        await page.goto('https://inline.amd.com/',{timeout:120000});
+        const error404 = await page.$$("#error-code");
+        if (error404.length===0) {
+            console.log(`${new Date().toLocaleTimeString()} - BINGO!!! 😎`);
+            sendEmail();
+        }else{
+            console.log(`${new Date().toLocaleTimeString()} - Sigue buscando... 😢 \n`);
         }
-        if (!hasStock) console.log(`${new Date().toLocaleTimeString()} - Sigue buscando... 😢 \n`);
         await browser.close();
     } catch (error) {
         console.log('Error cargando la web de AMD');
@@ -50,7 +34,7 @@ setInterval(() => {
     myFunction();
 }, 600000);
 
-function sendEmail(graphic) {
+function sendEmail() {
     try {
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -62,8 +46,8 @@ function sendEmail(graphic) {
 
         const mailOptions = {
             to: process.env.EMAIL_TO,
-            subject: `HAY STOCK DE ${graphic} 😎`,
-            text: "https://www.amd.com/en/direct-buy/es",
+            subject: `https://inline.amd.com/ está viva!!!! 😎`,
+            text: "https://inline.amd.com/",
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
