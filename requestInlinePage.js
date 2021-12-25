@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 dotenv.config();
 
 const myFunction = async () => {
-    const browser = await chromium.launch({ headless: false, chromiumSandbox: false });
+    const browser = await chromium.launch({ chromiumSandbox: false });
     try {
         const context = await browser.newContext();
         const page = await context.newPage();

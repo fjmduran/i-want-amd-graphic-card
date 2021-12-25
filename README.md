@@ -7,7 +7,7 @@ En este proyecto voy a usar [Playwright](https://playwright.dev/)
 Los desarrolladores de *Puppeteer* se fueron de Google a Microsoft y han creado Playwright partiendo de cero y corrigiendo algunos errores de concepción de Puppeteer.
 
 ## ¿Qué fichero usar?
-Usa el fichero requestInlinePage.js, ya que cuando AMD habilita la URL https://inline.amd.com/ es para que te apuntes a la cola para la compra.
+Usa el fichero requestInlinePage.js, me acabo de enterar que cuando AMD habilita la URL https://inline.amd.com/ es para que te apuntes a la cola para la compra.
 
 El fichero requestOnePage.js lo que hace es ver si en la página https://www.amd.com/en/direct-buy/es las gráficas tienen stock.
 
